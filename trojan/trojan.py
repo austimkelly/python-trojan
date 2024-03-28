@@ -1,3 +1,5 @@
+# continuously monitors and prints out the system's CPU usage, RAM usage, disk usage, 
+# and the number of running processes.
 #!/usr/bin/python3
 import psutil
 import base64
