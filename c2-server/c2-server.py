@@ -20,18 +20,22 @@ print("listening on port 1337...")
 
 # This line starts an infinite loop, meaning the server will 
 # continue to accept connections until it is manually stopped
+
 while True:
-	# establish a connection
-	clientsocket, client_ip = s.accept()
-	print("[+] received a connection from -> {}".format(client_ip))
+    clientsocket, client_ip = s.accept()
+    print("[+] received a connection from -> {}".format(client_ip))
 
-	# get the encoded data
-	# This line receives up to 4096 bytes of data from the client
-	encoded_data = clientsocket.recv(4096)
-	clientsocket.close()
+    encoded_data = clientsocket.recv(4096)
+    print("[+] received data: {}".format(encoded_data))  # Print the received data
+    clientsocket.close()
 
-	# open a file with a random name and insert the decoded data into it
-	random_fd = open("".join(random.choices(ascii_lowercase, k = 10)), "wb")  # Open the file in binary mode
-	random_fd.write(base64.b64decode(encoded_data))  # Write the decoded base64 data directly to the file
-	# This line closes the connection to the client
-	random_fd.close()
+    random_file_name = "".join(random.choices(ascii_lowercase, k = 10))
+    print("[+] writing data to file: {}".format(random_file_name))  # Print the name of the file being written to
+
+    random_fd = open(random_file_name, "wb")
+    decoded_data = base64.b64decode(encoded_data)
+    print("[+] decoded data: {}".format(decoded_data))  # Print the decoded data
+
+    random_fd.write(decoded_data)
+    random_fd.close()
+    print("[+] data written to file and file closed")  # Print a message after the file has been written and closed
