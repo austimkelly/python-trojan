@@ -34,14 +34,11 @@ while True:
 
 	random_fd = open(random_file_name, "wb")
 	try:
-		decoded_data = base64.b64decode(encoded_data).decode("UTF-8")
-		print("[+] decoded data: {}".format(decoded_data))  # Print the decoded data
+		decoded_data = base64.b64decode(encoded_data)
 		random_fd.write(decoded_data)
-	except UnicodeDecodeError as e:
-		print("[-] UnicodeDecodeError: ", e)
+	except Exception as e:
+		print("[-] Error: ", e)
 		print("[-] Data causing the error: ", encoded_data)
 	finally:
 		random_fd.close()
 		print("[+] file closed")  # Print a message after the file has been closed
-
-	print("[+] data written to file and file closed")  # Print a message after the file has been written and closed
