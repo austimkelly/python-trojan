@@ -22,20 +22,26 @@ print("listening on port 1337...")
 # continue to accept connections until it is manually stopped
 
 while True:
-    clientsocket, client_ip = s.accept()
-    print("[+] received a connection from -> {}".format(client_ip))
+	clientsocket, client_ip = s.accept()
+	print("[+] received a connection from -> {}".format(client_ip))
 
-    encoded_data = clientsocket.recv(4096)
-    print("[+] received data: {}".format(encoded_data))  # Print the received data
-    clientsocket.close()
+	encoded_data = clientsocket.recv(4096)
+	print("[+] received data: {}".format(encoded_data))  # Print the received data
+	clientsocket.close()
 
-    random_file_name = "".join(random.choices(ascii_lowercase, k = 10))
-    print("[+] writing data to file: {}".format(random_file_name))  # Print the name of the file being written to
+	random_file_name = "".join(random.choices(ascii_lowercase, k = 10))
+	print("[+] writing data to file: {}".format(random_file_name))  # Print the name of the file being written to
 
-    random_fd = open(random_file_name, "wb")
-    decoded_data = base64.b64decode(encoded_data)
-    print("[+] decoded data: {}".format(decoded_data))  # Print the decoded data
+	random_fd = open(random_file_name, "wb")
+	try:
+		decoded_data = base64.b64decode(encoded_data).decode("UTF-8")
+	except UnicodeDecodeError as e:
+		print("[-] UnicodeDecodeError: ", e)
+		print("[-] Data causing the error: ", encoded_data)
+		continue  # Skip the rest of this loop iteration
 
-    random_fd.write(decoded_data)
-    random_fd.close()
-    print("[+] data written to file and file closed")  # Print a message after the file has been written and closed
+	print("[+] decoded data: {}".format(decoded_data))  # Print the decoded data
+
+	random_fd.write(decoded_data)
+	random_fd.close()
+	print("[+] data written to file and file closed")  # Print a message after the file has been written and closed
